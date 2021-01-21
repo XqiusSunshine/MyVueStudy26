@@ -1,0 +1,19 @@
+<div id='app'>
+    <h1 id='hs'></h1>
+</div>
+<script src="./06-reactive.js"></script>
+<script>
+    const data = reactive({
+        title : 'Vue3响应式 xqius'
+    })
+    effect(()=>{
+        //组件更新函数  全量更新
+        hs.innerHTML = data.title
+        //vue3 diff后定点更新
+       vnode= render()
+       patch(oldvnode,vnode)
+    })
+    setTimeout(()=>{
+        data.title='变化 后的title'
+    },1000)
+</script>
