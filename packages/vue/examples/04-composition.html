@@ -1,0 +1,63 @@
+<div id="app">
+    <h1>composition-api</h1>
+    <!-- <p @click="add">{{state.counter}}</p>
+    <p >{{state.doubleCounter}}</p> -->
+    <p @click="add">{{counter}}</p>
+    <p >{{doubleCounter}}</p>
+    <p >{{anotherCounter}}</p>
+    <!-- <p>{{state.doubleCounter}}</p> -->
+</div> <script src="../dist/vue.global.js"></script> <script>
+
+    const {createApp,reactive,computed,ref,toRefs,onMounted,watch,watchEffect} =Vue
+
+    //counter相关业务逻辑
+    function useCounter(){
+        const state = reactive({
+                counter:0,
+                doubleCounter : computed(() => {
+                   return state.counter *2
+                })
+            })
+            //给渲染函数 暴露一个上下文
+            const add = () => {
+                state.counter++
+               
+            }
+            onMounted(()=>{
+                //挂载式执行
+                console.log(' userCounter,mounted')
+            })
+
+            
+        return {...toRefs(state),add}
+    }
+
+
+    createApp({
+        //getCurrentInstance()
+        setup(props,{attrs,emit,slots}){
+            console.log(this)
+            const {counter,doubleCounter,add} = useCounter()
+
+            //3.单值 响应式对象ref
+             const anotherCounter = ref(10)
+              //修改ref 需要使用value
+                // anotherCounter.value ++
+             //4.生命周期
+            onMounted(()=>{
+                //挂载式执行
+                console.log('setup mounted')
+            })
+            // //侦听器 watch
+            // watch(()=> state.doubleCounter,(curr,prev)=>{
+            //     console.log('watch doubleCounter发生了变化 ')
+            // })
+            // watchEffect(()=>{
+            //     console.log('watchEffect doubleCounter发生了变化 ',state.doubleCounter)
+            // })
+            // return {state,add,anotherCounter}
+            return { counter,doubleCounter,anotherCounter,add}
+        }
+    }).mount('#app')
+
+</script>
